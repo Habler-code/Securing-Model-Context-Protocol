@@ -1,22 +1,25 @@
 # Chapter 11 — Validate each request boundary in Python
 
-This Python companion translates the chapter's TypeScript/Zod snippets. It preserves the selected MCP methods, JSON field names, protocol revision and business limits. The chapter and this companion present the same contracts in different languages.
+Chapter 11 now presents Python listings. The three printed body stages are assembled exactly in [`../bounded_body_walkthrough.py`](../bounded_body_walkthrough.py); the printed request schemas, context admission and validation wrapper are assembled in [`../validation_walkthrough.py`](../validation_walkthrough.py). They reuse the shared `chapter11` helpers for the selected MCP methods, JSON field names, protocol revision and business limits.
 
-From the repository's `code` directory with its pinned Python requirements installed:
+Use Python 3.12 or later with the pinned requirements installed from `requirements.lock`. From the repository's `code` directory:
 
 ```sh
+python bounded_body_walkthrough.py
+python validation_walkthrough.py
 python chapter11/demo.py
+python -m unittest discover -s tests -p test_chapter11_walkthroughs.py -v
 python -m unittest discover -s tests -p test_middle_python.py -v
 ```
 
-The demo performs an offline walkthrough: bounded bytes, strict JSON, metadata, routing headers, selected Tool arguments, trusted identity and a rejected cross-tenant project. It starts no HTTP/MCP server and dispatches no real Tool.
+The two printed exercise modules define functions and compile the selected schemas; running them checks their imports and schema setup without producing demonstration output. The separate `chapter11/demo.py` performs a visible offline walkthrough: bounded bytes, strict JSON, metadata, routing headers, selected Tool arguments, trusted identity and a rejected cross-tenant project. It starts no HTTP/MCP server and dispatches no real Tool.
 
-## Book-to-Python mapping
+## Printed listings and shared implementation
 
-| Current manuscript example | Python companion |
+| Printed chapter example | Companion file or helper |
 | --- | --- |
-| Three stages of `readBoundedJson` | `bounded_body.py`: async `read_bounded_json` and `MAX_REQUEST_BYTES = 1_048_576` |
-| `validateRequest`, request/method/Tool schemas | `request_validation.py`: `validate_request` and reviewed Draft 2020-12 schemas |
+| Three stages of `read_bounded_json` | `code/bounded_body_walkthrough.py`, importing shared guards and `MAX_REQUEST_BYTES = 1_048_576` from `chapter11/bounded_body.py` |
+| `validate_request`, request/method/Tool schemas | `code/validation_walkthrough.py`, using `chapter11/request_validation.py` for the canonical pipeline and reviewed Draft 2020-12 validator |
 | `search` | Query trimmed to 1–500 characters, integer limit 1–50, default 10 |
 | `create_ticket` | Trimmed title 1–200, body at most 10,000, UUID `projectId` |
 | `resources/read` | At most 2,048-character URI and exact approved Resource origin |
@@ -24,7 +27,7 @@ The demo performs an offline walkthrough: bounded bytes, strict JSON, metadata, 
 | Trusted-context / ownership / authorization distinction | `validate_context` and separate `authorize_ticket_project` |
 | Output and safe-error sections | `validate_tool_output` and `safe_error` |
 
-The book's `Chapter11/request-validation.ts` module corresponds to `code/chapter11/request_validation.py`; the three bounded-body stages are assembled in `code/chapter11/bounded_body.py`. Shared local errors are in `errors.py`. Python helpers use snake_case; wire fields such as `projectId`, `tenantId`, `resultType` and namespaced metadata retain their exact protocol spelling.
+The root exercise files are the exact assembled printed snippets. `chapter11/bounded_body.py` also provides a canonical complete reader so tests can compare the book assembly with shared behavior. `chapter11/request_validation.py` performs protocol classification, metadata checks, argument normalization, explicit UUID validation and exact Resource-origin policy before the printed wrapper checks its displayed schemas. Shared local errors are in `chapter11/errors.py`. Python helpers use snake_case; wire fields such as `projectId`, `tenantId`, `resultType` and namespaced metadata retain their exact protocol spelling.
 
 ## Protocol and schema behavior
 
@@ -38,12 +41,14 @@ Raw header pairs preserve duplicates that a normalized framework header object m
 
 ## Companion additions and deployment requirements
 
-Extra runnable guards include rejecting blank-after-whitespace identity values while preserving exact nonblank identifiers, inspecting a contiguous buffer's actual byte count before copying it, skipping empty chunks, copied mutable buffers, duplicate-member/non-JSON-number rejection, a depth/node cap, a 200-character request-ID cap, explicit response categories, routing helpers, a fixture project-ownership gate and a closed output contract. Multi-byte memoryviews are bounded by bytes rather than element count; non-contiguous views are rejected. `max_bytes` can lower but cannot raise the fixed 1 MiB ceiling. These are documented companion additions, not claims that all code appears in the book's displayed snippets.
+The printed body walkthrough counts contiguous buffers by their actual byte size before copying, skips empty chunks, owns mutable buffers, and reuses duplicate-member/non-JSON-number rejection and the structure cap. Multi-byte memoryviews are bounded by bytes rather than element count; non-contiguous views are rejected. `max_bytes` can lower but cannot raise the fixed 1 MiB ceiling. The printed request wrapper reuses the canonical pipeline, including blank-identity rejection with exact preservation of nonblank identifiers, protocol classification, defaults, trimming, UUID checks and Resource-origin policy. Additional shared helpers implement routing-header comparison, project ownership and the selected output contract; the small printed schemas alone do not provide those integrations.
 
 The selected output contract has a tenant label, text and classification; unknown fields or cross-tenant values are blocked. Text may still contain hostile instructions and remains `untrusted-tool-data`. The returned object is an internal teaching record, not a complete MCP Tool response. An actual adapter should use exact official SDK types and authenticated connection provenance. No filter claims to remove every prompt injection or detect every secret.
 
 HTTP byte/read deadlines, cancellation, concurrency/rate budgets, authentication middleware, every supported adapter, per-resource authorization, distributed quotas, MRTR/subscriptions and full Tool dispatch require deployment integration. A bounded parser alone cannot stop a slow peer or prove identity provenance. No raw request or exception detail is logged; unexpected errors become a stable internal error with a random correlation ID.
 
 Tests cover bounded/reused/chunked bodies, empty chunks, multi-byte and strided memoryviews, invalid UTF-8/JSON, duplicate members, nesting/byte limits, wrong methods/tools/fields/types, missing or whitespace-only trusted identity, version/error mapping, header duplicates and sentinel encoding, mirrors and optional arguments, real 2020-12 validation, prohibited external references, Resource origins, project ownership and untrusted output. No live service or certificate is needed.
+
+`test_chapter11_walkthroughs.py` compares 13 body fixtures and 25 request fixtures with the canonical helpers, checks the exact reviewed book-source fingerprints, and imports both printed modules from an unrelated working directory. Accepted normalized values and stable error categories must remain aligned. If a printed snippet changes, update the book assembly and revalidate its source fingerprint and behavior together.
 
 Verified primary references: [MCP base protocol](https://modelcontextprotocol.io/specification/2026-07-28/basic), [Streamable HTTP](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http), [MCP error schema](https://modelcontextprotocol.io/specification/2026-07-28/schema), and [jsonschema validation](https://python-jsonschema.readthedocs.io/en/stable/validate/).

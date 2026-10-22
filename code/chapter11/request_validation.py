@@ -1,7 +1,8 @@
-"""Python companion for Chapter 11, targeting MCP revision 2026-07-28.
+"""Shared Python request contracts for Chapter 11 and MCP revision 2026-07-28.
 
-The current book prints TypeScript/Zod. This module translates the same selected
-request contracts to Python, with jsonschema's actual Draft 2020-12 validator.
+The book's code/validation_walkthrough.py imports this module for protocol and
+metadata checks, normalization, UUID and Resource policy, and local Draft
+2020-12 schema admission. The printed wrapper then checks its displayed schemas.
 It is not a complete MCP server or transport implementation.
 """
 

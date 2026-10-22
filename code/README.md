@@ -8,9 +8,12 @@ Chapters 2–20 have executable Python demonstrations.
 The examples were compared with the current chapter files on 22 October 2026.
 Each chapter README identifies the corresponding APIs and explains corrections,
 additional safeguards, and intentional differences. In particular, Chapter 11
-is a Python translation of the book's TypeScript/Zod contracts, not a claim that
-the printed listing is Python. The folder descriptions below describe the
-examples; they do not rename the book's chapter titles.
+now presents Python listings assembled in
+[`bounded_body_walkthrough.py`](bounded_body_walkthrough.py) and
+[`validation_walkthrough.py`](validation_walkthrough.py). These printed
+exercises reuse the shared `chapter11` guards and request validator. The folder
+descriptions below describe the examples; they do not rename the book's chapter
+titles.
 
 ## Set up
 
@@ -42,12 +45,14 @@ required by this companion.
 ```sh
 python chapter04/token_authorization.py
 python chapter11/demo.py
+python -m unittest discover -s tests -p test_chapter11_walkthroughs.py -v
 python chapter20/hitl_controls.py
 python -m unittest discover -s tests -v
 ```
 
 The suite includes subprocess smoke tests for all runnable chapter demos, plus
-positive, negative, tampering, expiry, and concurrency checks. Demos use synthetic
+printed Chapter 11 exercise parity checks and positive, negative, tampering,
+expiry, and concurrency checks. Demos use synthetic
 identifiers and ephemeral values, contact no external services, and never
 execute a real administrative Tool. Chapter 8 runs fixed local Git operations;
 Chapter 9 uses a temporary directory. No cloud account, API credential, model,
@@ -67,7 +72,7 @@ MCP listener, database, or container runtime is needed for the offline suite.
 | 8 | Bounded, no-shell process execution | [safe_process.py](chapter08/safe_process.py) · [Guide](chapter08/README.md) |
 | 9 | Local configuration, credential inheritance and filesystem jail | [local_config.py](chapter09/local_config.py) · [Guide](chapter09/README.md) |
 | 10 | Application egress policy | [egress_firewall.py](chapter10/egress_firewall.py) · [Guide](chapter10/README.md) |
-| 11 | Bounded input, protocol/header contracts and output validation | [demo.py](chapter11/demo.py) · [Guide](chapter11/README.md) |
+| 11 | Printed Python walkthroughs, bounded input, protocol/header contracts and output validation | [bounded_body_walkthrough.py](bounded_body_walkthrough.py) · [validation_walkthrough.py](validation_walkthrough.py) · [demo.py](chapter11/demo.py) · [Guide](chapter11/README.md) |
 | 12 | Bounded bodies and an authoritative custom Tool index | [tool_index.py](chapter12/tool_index.py) · [Guide](chapter12/README.md) |
 | 13 | Rotation-aware, fail-closed secret caching | [secret_cache.py](chapter13/secret_cache.py) · [Guide](chapter13/README.md) |
 | 14 | Tenant-scoped data, handles, caches and database adapters | [tenant_isolation.py](chapter14/tenant_isolation.py) · [Guide](chapter14/README.md) |

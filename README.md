@@ -37,8 +37,9 @@ The offline suite needs no identity-provider account, cloud resource, model,
 database, or production credential. It does not start a real MCP service or
 execute administrative Tools. All executable companion sources are Python;
 supporting files include JSON configuration, an illustrative Compose baseline,
-and a PostgreSQL fixture. Chapter 11's guide explicitly maps the book's
-TypeScript/Zod contracts to their Python implementation.
+and a PostgreSQL fixture. Chapter 11's printed Python listings are assembled in
+`code/bounded_body_walkthrough.py` and `code/validation_walkthrough.py`, using
+the shared validation helpers described in its guide.
 
 ## Navigate the examples
 

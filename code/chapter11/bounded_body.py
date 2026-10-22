@@ -1,4 +1,9 @@
-"""Python translation of Chapter 11's three bounded-body stages."""
+"""Shared bounded-body guards for Chapter 11's printed Python walkthrough.
+
+code/bounded_body_walkthrough.py assembles the three printed stages and imports
+the structure and strict-JSON checks here. This module also supplies a complete
+reader for canonical behavior tests; transport deadlines remain separate.
+"""
 
 from __future__ import annotations
 
