@@ -1,0 +1,17 @@
+# ILLUSTRATIVE ONLY. This is not a deployable image or a tested sandbox.
+# Replace the required variable with an approved, scanned image@sha256:digest.
+# The Compose parser fails closed when no image is supplied.
+services:
+  document-tool:
+    image: ${APPROVED_DOCUMENT_IMAGE:?Set an approved digest-pinned document-tool image}
+    user: "10001:10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/work:rw,noexec,nosuid,nodev,size=64m"]
+    pids_limit: 64
+    mem_limit: 256m
+    cpus: 0.50
+    network_mode: none
+    volumes:
+      - ./approved-input:/input:ro
