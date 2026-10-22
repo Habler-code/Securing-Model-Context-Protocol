@@ -1,0 +1,23 @@
+# Platform-neutral SIEM query contract from Chapter 18.
+# This is pseudocode, not executable vendor query syntax.
+INPUT validated_tool_invocations:
+    one authoritative, validated and deduplicated decision per invocation
+    tenant_ref, actor_ref, tool_alias, decision, occurred_at
+PARAMETERS:
+    equal-duration current_window and equivalent_baseline_window
+    window_minutes > 0
+    minimum_baseline_count = 5
+    cold_start_threshold = 100
+    minimum_current_count = 50
+    ratio_threshold = 10.0
+GROUP BY tenant_ref, actor_ref AS subject_ref, tool_alias
+COUNT allowed invocations in each window AS current_count, baseline_count
+IF baseline_count < minimum_baseline_count:
+    ALERT WHEN current_count >= cold_start_threshold
+    explanation = cold-start count and absolute threshold
+ELSE:
+    ALERT WHEN current_count >= minimum_current_count
+               AND current_count / baseline_count >= ratio_threshold
+    explanation = count ratio and ratio threshold
+EMIT rule_name = invocation_spike, tenant_ref, subject_ref, tool_alias,
+     current_count, baseline_count, window_minutes, explanation, triggered_at

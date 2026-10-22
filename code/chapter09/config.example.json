@@ -1,0 +1,5 @@
+{
+  "apiBaseUrl": "https://api.example.com",
+  "tenantId": "demo-tenant",
+  "sandboxDir": "/replace/with/protected/existing/workspace"
+}
